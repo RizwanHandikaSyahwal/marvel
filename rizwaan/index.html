@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+  <title>Data Example</title>
+  <style>
+    img {
+      width: 150px;
+    }
+    .marvel-logo {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+    .title-background {
+      background-color: #8B0000;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .title-text {
+      color: white;
+      margin: 0;
+    }
+    body {
+      background-image: url('https://example.com/background.jpg'); /* Ganti URL dengan URL gambar latar belakang yang Anda inginkan */
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      background-color: #810c0c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title-background">
+      <h1 class="title-text">Character Details</h1>
+    </div>
+    <img src="Marvel_Logo.svg.png" class="marvel-logo" alt="Marvel Logo">
+    <div id="characterDetails" class="row"></div>
+  </div>
+
+  <script>
+    var url = "https://gateway.marvel.com/v1/public/characters?ts=1&apikey=dc6f0244db163ed561dc9ca202d00c59&hash=ff92df978fd93edd7a6ba1dec72d9ddd";
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        var characters = data.data.results;
+
+        var characterDetails = document.getElementById('characterDetails');
+        characters.forEach(character => {
+          var characterDiv = document.createElement('div');
+          characterDiv.classList.add('col-md-4'); // Set the column width for each character
+
+          characterDiv.innerHTML = `
+            <div class="card mb-3">
+              <img src="${character.thumbnail.path}.${character.thumbnail.extension}" class="card-img-top" alt="Character Image">
+              <div class="card-body">
+                <h2 class="card-title">${character.name}</h2>
+                <p class="card-text">${character.description}</p>
+                <h3 class="card-subtitle mb-2">Comics:</h3>
+                <ul class="list-group">
+                  ${character.comics.items.map(comic => `<li class="list-group-item">${comic.name}</li>`).join('')}
+                </ul>
+                <h3 class="card-subtitle mb-2">Series:</h3>
+                <ul class="list-group">
+                  ${character.series.items.map(series => `<li class="list-group-item">${series.name}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          `;
+          characterDetails.appendChild(characterDiv);
+        });
+      })
+      .catch(error => console.log(error));
+  </script>
+</body>
+</html>
+
